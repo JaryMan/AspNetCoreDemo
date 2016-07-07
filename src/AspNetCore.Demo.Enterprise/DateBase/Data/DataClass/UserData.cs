@@ -5,7 +5,8 @@ using System.Threading.Tasks;
 
 namespace AspNetCore.Demo.Enterprise.DateBase.Data.DataClass
 {
-    public class UserData
+    public class UserData: IDataClass.IUserData
     {
+
     }
 }
