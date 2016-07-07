@@ -55,5 +55,15 @@ namespace AspNetCore.Demo.Enterprise.DateBase.Data
             var sqlStr = string.Format("SELECT TOP {0} * FROM(SELECT ROW_NUMBER() OVER(ORDER BY id) AS RowNumber, *FROM {2}) A WHERE RowNumber > {0} * ({1} - 1)", pageCount, pageIndex,tableName);
             return dbContent.connection.Query<T>(sqlStr).ToList();
         }
+
+        /// <summary>
+        /// 根据ID删除信息
+        /// </summary>
+        /// <param name="id">ID</param>
+        /// <returns></returns>
+        public int DeleteForId(int id)
+        {
+            return dbContent.connection.Execute(string.Format("Delete from {0} where Id=@Id", tableName), id);
+        }
     }
 }
