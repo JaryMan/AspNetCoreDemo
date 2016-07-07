@@ -10,6 +10,10 @@ namespace AspNetCore.Demo.Enterprise.DateBase.Data
     {
         protected DbContent dbContent=new DbContent();
 
+        /// <summary>
+        /// 表名
+        /// </summary>
+        protected string tableName = typeof(T).ToString();
 
 
         /// <summary>
@@ -26,9 +30,30 @@ namespace AspNetCore.Demo.Enterprise.DateBase.Data
         /// 查询所有
         /// </summary>
         /// <returns></returns>
-        public List<T> QueryAll()
+        public IList<T> QueryAll()
         {
-            return dbContent.connection.Query<T>("").ToList();
+            return dbContent.connection.Query<T>("select * from " + tableName).ToList();
+        }
+        
+        /// <summary>
+        /// 查询总记录数
+        /// </summary>
+        /// <returns></returns>
+        public int QueryTotalCount()
+        {
+            return dbContent.connection.QueryFirst<int>("select count(0) from " + tableName);
+        }
+
+        /// <summary>
+        /// 分页查询
+        /// </summary>
+        /// <param name="pageIndex">页码</param>
+        /// <param name="pageCount">页面大小</param>
+        /// <returns></returns>
+        public IList<T> QueryPageList(int pageIndex,int pageCount)
+        {
+            var sqlStr = string.Format("SELECT TOP {0} * FROM(SELECT ROW_NUMBER() OVER(ORDER BY id) AS RowNumber, *FROM {2}) A WHERE RowNumber > {0} * ({1} - 1)", pageCount, pageIndex,tableName);
+            return dbContent.connection.Query<T>(sqlStr).ToList();
         }
     }
 }
