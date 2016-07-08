@@ -43,7 +43,7 @@ namespace AspNetCore.Demo.Enterprise.DateBase.Data.DataClass
         /// <returns></returns>
         public IList<T> QueryForCount(int count)
         {
-            var sqlStr = string.Format("select top {0} * from {1}", count, tableName);
+            var sqlStr = $"select top {count} * from {tableName}";
             return dbContent.connection.Query<T>(sqlStr).ToList();
         }
 
@@ -53,7 +53,7 @@ namespace AspNetCore.Demo.Enterprise.DateBase.Data.DataClass
         /// <returns></returns>
         public int QueryTotalCount()
         {
-            return dbContent.connection.QueryFirst<int>("select count(0) from " + tableName);
+            return dbContent.connection.QueryFirst<int>($"select count(0) from {tableName}");
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace AspNetCore.Demo.Enterprise.DateBase.Data.DataClass
         /// <returns></returns>
         public int DeleteForId(int id)
         {
-            return dbContent.connection.Execute(string.Format("Delete from {0} where Id=@Id", tableName), id);
+            return dbContent.connection.Execute($"Delete from {tableName} where Id=@Id", id);
         }
 
         #region 异步
@@ -87,7 +87,7 @@ namespace AspNetCore.Demo.Enterprise.DateBase.Data.DataClass
         /// <returns></returns>
         public async Task DeleteForIdAsync(int id)
         {
-            await dbContent.connection.ExecuteAsync(string.Format("Delete from {0} where Id=@Id", tableName), id);
+            await dbContent.connection.ExecuteAsync($"Delete from {tableName} where Id=@Id", id);
         }
 
         #endregion
