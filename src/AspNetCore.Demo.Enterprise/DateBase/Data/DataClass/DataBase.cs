@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 
-namespace AspNetCore.Demo.Enterprise.DateBase.Data
+namespace AspNetCore.Demo.Enterprise.DateBase.Data.DataClass
 {
     public class DataBase<T>
     {
@@ -35,6 +35,17 @@ namespace AspNetCore.Demo.Enterprise.DateBase.Data
             return dbContent.connection.Query<T>("select * from " + tableName).ToList();
         }
         
+        /// <summary>
+        /// 根据查询数量获取记录
+        /// </summary>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        public IList<T> QueryForCount(int count)
+        {
+            var sqlStr = string.Format("select top {0} * from {1}", count, tableName);
+            return dbContent.connection.Query<T>(sqlStr).ToList();
+        }
+
         /// <summary>
         /// 查询总记录数
         /// </summary>
