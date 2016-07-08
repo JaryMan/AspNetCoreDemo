@@ -16,11 +16,6 @@ namespace AspNetCore.Demo.Enterprise.DateBase
         private SqlConnection _connection;
         public SqlConnection connection => _connection ?? (_connection = GetOpenConnection());
 
-        public DbContent()
-        {
-            ConnectionString = "";
-        }
-
         public static SqlConnection GetOpenConnection(bool mars = false)
         {
             var cs = ConnectionString;

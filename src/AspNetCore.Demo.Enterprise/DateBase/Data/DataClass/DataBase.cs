@@ -77,5 +77,19 @@ namespace AspNetCore.Demo.Enterprise.DateBase.Data.DataClass
         {
             return dbContent.connection.Execute(string.Format("Delete from {0} where Id=@Id", tableName), id);
         }
+
+        #region 异步
+
+        /// <summary>
+        /// 根据ID删除信息（异步）
+        /// </summary>
+        /// <param name="id">ID</param>
+        /// <returns></returns>
+        public async Task DeleteForIdAsync(int id)
+        {
+            await dbContent.connection.ExecuteAsync(string.Format("Delete from {0} where Id=@Id", tableName), id);
+        }
+
+        #endregion
     }
 }
