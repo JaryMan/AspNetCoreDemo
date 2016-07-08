@@ -1,4 +1,5 @@
-﻿using AspNetCore.Demo.Enterprise.DateBase.Data;
+﻿using AspNetCore.Demo.Enterprise.DateBase.Data.DataClass;
+using AspNetCore.Demo.Enterprise.DateBase.Data.IDataClass;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,7 @@ namespace AspNetCore.Demo.Enterprise.DateBase.Service
         /// <returns></returns>
         public static T QueryForId(int id)
         {
-            DataBase<T> db = new DataBase<T>();
+            IDataBase<T> db = new DataBase<T>();
             return db.QueryForId(id);
         }
 
@@ -25,7 +26,7 @@ namespace AspNetCore.Demo.Enterprise.DateBase.Service
         /// <returns></returns>
         public static IList<T> QueryAll()
         {
-            DataBase<T> db = new DataBase<T>();
+            IDataBase<T> db = new DataBase<T>();
             return db.QueryAll();
         }
 
@@ -36,7 +37,7 @@ namespace AspNetCore.Demo.Enterprise.DateBase.Service
         /// <returns></returns>
         public static IList<T> QueryForCount(int count)
         {
-            DataBase<T> db = new DataBase<T>();
+            IDataBase<T> db = new DataBase<T>();
             return db.QueryForCount(count);
         }
 
@@ -46,7 +47,7 @@ namespace AspNetCore.Demo.Enterprise.DateBase.Service
         /// <returns></returns>
         public static int QueryTotalCount()
         {
-            DataBase<T> db = new DataBase<T>();
+            IDataBase<T> db = new DataBase<T>();
             return db.QueryTotalCount();
         }
 
@@ -58,7 +59,7 @@ namespace AspNetCore.Demo.Enterprise.DateBase.Service
         /// <returns></returns>
         public static IList<T> QueryPageList(int pageIndex,int pageCount)
         {
-            DataBase<T> db = new DataBase<T>();
+            IDataBase<T> db = new DataBase<T>();
             return db.QueryPageList(pageIndex, pageCount);
         }
 
@@ -69,7 +70,7 @@ namespace AspNetCore.Demo.Enterprise.DateBase.Service
         /// <returns></returns>
         public static bool DeleteForId(int id)
         {
-            DataBase<T> db = new DataBase<T>();
+            IDataBase<T> db = new DataBase<T>();
             return db.DeleteForId(id) > 0;
         }
     }

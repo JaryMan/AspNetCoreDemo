@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AspNetCore.Demo.Enterprise.DateBase.Data.IDataClass
 {
-    public interface IUserData:IDataBase<User>
+    public interface IUserData
     {
     }
 }

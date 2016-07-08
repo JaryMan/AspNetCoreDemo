@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
+using AspNetCore.Demo.Enterprise.DateBase.Data.IDataClass;
 
 namespace AspNetCore.Demo.Enterprise.DateBase.Data.DataClass
 {
-    public class DataBase<T>
+    public class DataBase<T>:IDataBase<T>
     {
         protected DbContent dbContent=new DbContent();
 
