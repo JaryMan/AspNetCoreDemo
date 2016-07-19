@@ -4,37 +4,29 @@
 <#@ import namespace="System"#>
 <#@ import namespace="System.Collections.Generic"#>
 <#@ include file="DBSchema.ttinclude"#>
-
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-using DapperEx;
-
-namespace Entity
-{
-
+<#@ include file="MultiDocument.ttinclude"#>
+<# var manager = new Manager(Host, GenerationEnvironment, true) { OutputPath = Path.GetDirectoryName(Host.TemplateFile)}; #>
 <#
     var dbSchema=DBSchemaFactory.GetDBSchema();
     List<string> tableList=dbSchema.GetTablesList();
-    string Extension="Info";
     foreach(string tableName in tableList)
     {
+        manager.StartBlock(tableName+".cs");
         Table table=dbSchema.GetTableMetadata(tableName);
 #>
+using System;
+using System.Collections.Generic;
+using System.Text;
 
+namespace Project.Model
+{
     [Serializable]
-    [TableAttribute(Name = "<#=tableName#>")]
-     /// <summary>
-     ///<#=tableName#><#=Extension#><#= table.TableExplain??""#>
-     /// </summary>
-    public partial class <#=tableName#><#=Extension#>
+    public class <#=tableName#>
     {
-        #region 构造函数
-        public <#=tableName#><#=Extension#>() { }
+        #region Constructor
+        public <#=tableName#>() { }
 
-        public <#=tableName#><#=Extension#>(<#=table.ColumnTypeNames#>)
+        public <#=tableName#>(<#=table.ColumnTypeNames#>)
         {
 <#
         foreach(Column c in table.Columns)
@@ -47,34 +39,14 @@ namespace Entity
         }
         #endregion
 
-        #region 属性
+        #region Attributes
 <#
         foreach(Column c in table.Columns)
         {
 #>
+        private <#=GeneratorHelper.GetQuesMarkByType(c.TypeName)#> <#=c.LowerColumnName#>;
 
-        private <#=GeneratorHelper.GetQuesMarkByType(c.AllowDBNull,c.TypeName)#> <#=c.LowerColumnName#>;
-
-         /// <summary>
-<#  
-            string ColumnExplain="";
-            if(!String.IsNullOrWhiteSpace(c.ColumnExplain))
-            {
-                string []  ColumnExplains = c.ColumnExplain.Split(new [] {'\r', '\n'}, StringSplitOptions.RemoveEmptyEntries);
-                foreach (var line in ColumnExplains)
-                {#>
-         ///<#=line#>
-<#              }
-            }
-             #>
-         /// </summary>
-<#
-            if(c.AutoIncrement)
-            {#>    
-        [Id(true)]
-<#            }
-#>
-        public <#=GeneratorHelper.GetQuesMarkByType(c.AllowDBNull,c.TypeName)#> <#=c.UpColumnName#>
+        public <#=GeneratorHelper.GetQuesMarkByType(c.TypeName)#> <#=c.UpColumnName#>
         {
             get { return <#=c.LowerColumnName#>; }
             set { <#=c.LowerColumnName#> = value; }
@@ -84,7 +56,7 @@ namespace Entity
 #>
         #endregion
 
-        #region 验证
+        #region Validator
         public List<string> ErrorList = new List<string>();
         private bool Validator()
         {    
@@ -128,36 +100,14 @@ namespace Entity
         }
 #>
             return validatorResult;
-        }
-
+        }    
         #endregion
-
-        #region 辅助方法
-        public  <#=tableName#><#=Extension#> Clone(bool isDeepCopy)
-        {
-            <#=tableName#><#=Extension#>  footman;
-            if (isDeepCopy)
-            {
-                MemoryStream memoryStream = new MemoryStream();
-                BinaryFormatter formatter = new BinaryFormatter();
-                formatter.Serialize(memoryStream, this);
-                memoryStream.Position = 0;
-                footman = (<#=tableName#><#=Extension#>)formatter.Deserialize(memoryStream);
-            }
-            else
-            { 
-                footman = (<#=tableName#><#=Extension#>)this.MemberwiseClone();
-            } 
-            return footman;
-        }
-        #endregion    
-
-     }
-
+    }
+}
 <#
+        manager.EndBlock();
     }
     dbSchema.Dispose();
-#>
-}
 
-ModelAuto.tt
+    manager.Process(true);
+#>

@@ -4,6 +4,17 @@
 <#@ import namespace="System"#>
 <#@ import namespace="System.Collections.Generic"#>
 <#@ include file="DBSchema.ttinclude"#>
+<#@ include file="MultiDocument.ttinclude"#>
+<# var manager = new Manager(Host, GenerationEnvironment, true) { OutputPath = Path.GetDirectoryName(Host.TemplateFile)}; #>
+
+<#
+    var dbSchema=DBSchemaFactory.GetDBSchema();
+    List<string> tableList=dbSchema.GetTablesList();
+    foreach(string tableName in tableList)
+    {
+        manager.StartBlock(tableName+"Data.cs");
+        Table table=dbSchema.GetTableMetadata(tableName);
+#>
 
 using DapperEx;
 using System;
@@ -14,18 +25,16 @@ using Entity;
 
 namespace DAL
 {
-
-<# 
-     var dbSchema=DBSchemaFactory.GetDBSchema();
-    List<string> tableList=dbSchema.GetTablesList();
-    string Extension="Info";
-    foreach(string tableName in tableList)
-    { #>
-    public partial class <#=tableName#>DAL: DataAccessBase<<#=tableName#><#=Extension#>>
+    public class <#=tableName#>Data: DataBase<<#=tableName#>>
     {        
-        public <#=tableName#>DAL(DbBase db) : base(db) { }
+        public <#=tableName#>Data(DbBase db) : base(db) { }
     }
-<# } #>
 }
 
-DALAuto.tt
+<#
+        manager.EndBlock();
+    }
+    dbSchema.Dispose();
+
+    manager.Process(true);
+#>

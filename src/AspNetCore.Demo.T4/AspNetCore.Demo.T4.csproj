@@ -46,15 +46,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DALAuto.cs">
+    <Compile Include="BLLAuto.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>DALAuto.tt</DependentUpon>
-    </Compile>
-    <Compile Include="ModelAuto.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ModelAuto.tt</DependentUpon>
+      <DependentUpon>BLLAuto.tt</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -62,6 +57,7 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="DBSchema.ttinclude" />
+    <None Include="MultiDocument.ttinclude" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
