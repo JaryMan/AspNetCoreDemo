@@ -7,6 +7,8 @@ namespace AspNetCore.Demo.Enterprise.DateBase.Model
 {
     public class User
     {
+        public int ID { get; set; }
+
         /// <summary>
         /// 用户名
         /// </summary>

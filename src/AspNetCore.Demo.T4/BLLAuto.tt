@@ -31,7 +31,84 @@ namespace BLL
 {   
     public  class <#=tableName#>Service : ServiceBase<<#=Entity#>>
     {
+        private DbConnection _conn = new DbConnection();
+        
+        public int Insert(<#=tableName#> <#=tableName#>)
+        {
+            using (Conn)
+            {
+                string query = "INSERT INTO Book(Name)VALUES(@name)";
+                return Conn.Execute(query, book);
+            }
+        }
 
+        public int Update(Model.Book book)
+        {
+            using (Conn)
+            {
+                string query = "UPDATE Book SET  Name=@name WHERE id =@id";
+                return Conn.Execute(query, book);
+            }
+        }
+
+        public int Delete(Model.Book book)
+        {
+            using (Conn)
+            {
+                string query = "DELETE FROM Book WHERE id = @id";
+                return Conn.Execute(query, book);
+            }
+        }
+
+        public int Delete(string id)
+        {
+            using (Conn)
+            {
+                string query = "DELETE FROM Book WHERE id = @id";
+                return Conn.Execute(query, new { id = id });
+            }
+        }
+
+        public IList<Model.Book> GetList()
+        {
+            using (Conn)
+            {
+                string query = "SELECT * FROM Book";
+                return Conn.Query<Book>(query).ToList();
+            }
+        }
+
+        public Model.Book GetEntity(string id)
+        {
+            Book book;
+            string query = "SELECT * FROM Book WHERE id = @id";
+            using (Conn)
+            {
+                book = Conn.Query<Book>(query, new { id = id }).SingleOrDefault();
+                return book;
+            }
+        }
+
+        public Book GetEntityWithRefence(string id)
+        {
+            using (Conn)
+            {
+                string query = "SELECT * FROM Book b LEFT JOIN BookReview br ON br.BookId = b.Id WHERE b.id = @id";
+                Book lookup = null;
+                var b = Conn.Query<Book, BookReview, Book>(query,
+                    (book, bookReview) =>
+                    {
+                        if (lookup == null || lookup.Id != book.Id)
+                            lookup = book;
+                        if (bookReview != null)
+                            lookup.Reviews.Add(bookReview);
+                        return lookup;
+                    }, new { id = id }).Distinct().SingleOrDefault();
+                return b;
+            }
+        }
+
+        #endregion
     }
 }
 

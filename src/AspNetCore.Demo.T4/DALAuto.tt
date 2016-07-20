@@ -14,23 +14,117 @@
     {
         manager.StartBlock(tableName+"Data.cs");
         Table table=dbSchema.GetTableMetadata(tableName);
+        var modelValueName=tableName.Substring(0,1).ToLower() + tableName.Substring(1);
 #>
-
-using DapperEx;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Dapper;
 using System.Text;
-using Entity;
 
-namespace DAL
+namespace AspNetCore.Demo.Enterprise.DateBase.Data.DataClass
 {
-    public class <#=tableName#>Data: DataBase<<#=tableName#>>
-    {        
-        public <#=tableName#>Data(DbBase db) : base(db) { }
+    public class <#=tableName#>
+    {
+        protected DbConnection dbConnection = new DbConnection();
+
+        #region 基本方法
+
+        /// <summary>
+        /// 根据ID查询信息
+        /// </summary>
+        /// <param name="id">ID号</param>
+        /// <returns></returns>
+        public <#=tableName#> QueryForId(int id)
+        {
+            return dbConnection.connection.QueryFirstOrDefault<<#=tableName#>>("select Id=@Id", id);
+        }
+
+        /// <summary>
+        /// 查询所有
+        /// </summary>
+        /// <returns></returns>
+        public IList<<#=tableName#>> QueryAll()
+        {
+            return dbConnection.connection.Query<<#=tableName#>>("select * from <#=tableName#>").ToList();
+        }
+
+        /// <summary>
+        /// 根据查询数量获取记录
+        /// </summary>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        public IList<<#=tableName#>> QueryForCount(int count)
+        {
+            var sqlStr = string.Format("select top {0} * from <#=tableName#>", count);
+            return dbConnection.connection.Query<<#=tableName#>>(sqlStr).ToList();
+        }
+
+        /// <summary>
+        /// 查询总记录数
+        /// </summary>
+        /// <returns></returns>
+        public int QueryTotalCount()
+        {
+            return dbConnection.connection.QueryFirst<int>("select count(0) from <#=tableName#>");
+        }
+
+        /// <summary>
+        /// 分页查询
+        /// </summary>
+        /// <param name="pageIndex">页码</param>
+        /// <param name="pageCount">页面大小</param>
+        /// <returns></returns>
+        public IList<<#=tableName#>> QueryPageList(int pageIndex, int pageCount)
+        {
+            var sqlStr = string.Format("SELECT TOP {0} * FROM(SELECT ROW_NUMBER() OVER(ORDER BY id) AS RowNumber, *FROM  <#=tableName#>) A WHERE RowNumber > {0} * ({1} - 1)", pageCount, pageIndex);
+            return dbConnection.connection.Query<<#=tableName#>>(sqlStr).ToList();
+        }
+        
+        /// <summary>
+        /// 根据ID更新数据
+        /// </summary>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        public int Update(<#=tableName#> <#=modelValueName#>)
+        {
+            if(<#=modelValueName#>.ID == 0) return 0;
+            if(!<#=modelValueName#>.Validator()) return 0;
+            var parameters = new DynamicParameters();
+            var updateStr = new StringBuilder();
+<#
+        for(int i=0;i<table.Columns.Count;i++)
+        {
+            if(table.Columns[i].UpColumnName=="ID")continue;            
+#>
+            updateStr.Append("<#=table.Columns[i].UpColumnName#>=@<#=table.Columns[i].UpColumnName#><# if(i<table.Columns.Count-1){#>,<#}#>");
+            parameters.Add("@<#=table.Columns[i].UpColumnName#>", <#=modelValueName#>.<#=table.Columns[i].UpColumnName#>); 
+     
+<#
+        }
+#>
+            var sqlStr = string.Format("update <#=tableName#> set {0} where ID=@ID",updateStr);
+            return dbConnection.connection.Execute(sqlStr,parameters);
+        }
+
+        /// <summary>
+        /// 根据ID删除信息
+        /// </summary>
+        /// <param name="id">ID</param>
+        /// <returns></returns>
+        public int DeleteForId(int id)
+        {
+            return dbConnection.connection.Execute("Delete from  <#=tableName#> where Id=@Id", id);
+        }
+
+        #endregion
+
+        #region 扩展方法
+        
+        #endregion
     }
 }
-
 <#
         manager.EndBlock();
     }

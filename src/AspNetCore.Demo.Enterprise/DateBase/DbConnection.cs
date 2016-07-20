@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AspNetCore.Demo.Enterprise.DateBase
 {
-    public partial class DbContent : IDisposable
+    public partial class DbConnection : IDisposable
     {
         /// <summary>
         /// 数据库连接字符串

@@ -9,7 +9,7 @@ namespace AspNetCore.Demo.Enterprise.DateBase.Data.DataClass
 {
     public class DataBase<T>:IDataBase<T>
     {
-        protected DbContent dbContent=new DbContent();
+        protected DbConnection dbConnection = new DbConnection();
 
         /// <summary>
         /// 表名
@@ -24,7 +24,7 @@ namespace AspNetCore.Demo.Enterprise.DateBase.Data.DataClass
         /// <returns></returns>
         public T QueryForId(int id)
         {
-            return dbContent.connection.QueryFirstOrDefault<T>("select Id=@Id", id);
+            return dbConnection.connection.QueryFirstOrDefault<T>("select Id=@Id", id);
         }
 
         /// <summary>
@@ -33,9 +33,9 @@ namespace AspNetCore.Demo.Enterprise.DateBase.Data.DataClass
         /// <returns></returns>
         public IList<T> QueryAll()
         {
-            return dbContent.connection.Query<T>("select * from " + tableName).ToList();
+            return dbConnection.connection.Query<T>("select * from " + tableName).ToList();
         }
-        
+
         /// <summary>
         /// 根据查询数量获取记录
         /// </summary>
@@ -43,8 +43,8 @@ namespace AspNetCore.Demo.Enterprise.DateBase.Data.DataClass
         /// <returns></returns>
         public IList<T> QueryForCount(int count)
         {
-            var sqlStr = $"select top {count} * from {tableName}";
-            return dbContent.connection.Query<T>(sqlStr).ToList();
+            var sqlStr = string.Format("select top {0} * from {1}", count, tableName);
+            return dbConnection.connection.Query<T>(sqlStr).ToList();
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace AspNetCore.Demo.Enterprise.DateBase.Data.DataClass
         /// <returns></returns>
         public int QueryTotalCount()
         {
-            return dbContent.connection.QueryFirst<int>($"select count(0) from {tableName}");
+            return dbConnection.connection.QueryFirst<int>("select count(0) from " + tableName);
         }
 
         /// <summary>
@@ -62,10 +62,10 @@ namespace AspNetCore.Demo.Enterprise.DateBase.Data.DataClass
         /// <param name="pageIndex">页码</param>
         /// <param name="pageCount">页面大小</param>
         /// <returns></returns>
-        public IList<T> QueryPageList(int pageIndex,int pageCount)
+        public IList<T> QueryPageList(int pageIndex, int pageCount)
         {
-            var sqlStr = string.Format("SELECT TOP {0} * FROM(SELECT ROW_NUMBER() OVER(ORDER BY id) AS RowNumber, *FROM {2}) A WHERE RowNumber > {0} * ({1} - 1)", pageCount, pageIndex,tableName);
-            return dbContent.connection.Query<T>(sqlStr).ToList();
+            var sqlStr = string.Format("SELECT TOP {0} * FROM(SELECT ROW_NUMBER() OVER(ORDER BY id) AS RowNumber, *FROM {2}) A WHERE RowNumber > {0} * ({1} - 1)", pageCount, pageIndex, tableName);
+            return dbConnection.connection.Query<T>(sqlStr).ToList();
         }
 
         /// <summary>
@@ -75,21 +75,7 @@ namespace AspNetCore.Demo.Enterprise.DateBase.Data.DataClass
         /// <returns></returns>
         public int DeleteForId(int id)
         {
-            return dbContent.connection.Execute($"Delete from {tableName} where Id=@Id", id);
+            return dbConnection.connection.Execute(string.Format("Delete from {0} where Id=@Id", tableName), id);
         }
-
-        #region 异步
-
-        /// <summary>
-        /// 根据ID删除信息（异步）
-        /// </summary>
-        /// <param name="id">ID</param>
-        /// <returns></returns>
-        public async Task DeleteForIdAsync(int id)
-        {
-            await dbContent.connection.ExecuteAsync($"Delete from {tableName} where Id=@Id", id);
-        }
-
-        #endregion
     }
 }
