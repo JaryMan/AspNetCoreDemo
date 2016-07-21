@@ -26,6 +26,8 @@ namespace AspNetCore.Demo.Enterprise.DateBase.Service
 {
     public static class <#=tableName#>Serivce
     {
+        #region 基本方法
+
         /// <summary>
         /// 根据ID查询记录
         /// </summary>
@@ -33,8 +35,8 @@ namespace AspNetCore.Demo.Enterprise.DateBase.Service
         /// <returns></returns>
         public static <#=tableName#> QueryForId(this <#=tableName#> entity)
         {
-            <#=tableName#>Data<<#=tableName#>> db = new <#=tableName#>Data<<#=tableName#>>();
-            return db.QueryForId(entity.ID);
+            <#=tableName#>Data data = new <#=tableName#>Data();
+            return data.QueryForId(entity.Id);
         }
 
         /// <summary>
@@ -43,8 +45,8 @@ namespace AspNetCore.Demo.Enterprise.DateBase.Service
         /// <returns></returns>
         public static IList<<#=tableName#>> QueryAll(this <#=tableName#> entity)
         {
-            <#=tableName#>Data<<#=tableName#>> db = new <#=tableName#>Data<<#=tableName#>>();
-            return db.QueryAll();
+            <#=tableName#>Data data = new <#=tableName#>Data();
+            return data.QueryAll();
         }
 
         /// <summary>
@@ -54,8 +56,8 @@ namespace AspNetCore.Demo.Enterprise.DateBase.Service
         /// <returns></returns>
         public static IList<<#=tableName#>> QueryForCount(this <#=tableName#> entity,int count = 10)
         {
-            <#=tableName#>Data<<#=tableName#>> db = new <#=tableName#>Data<<#=tableName#>>();
-            return db.QueryForCount(count);
+            <#=tableName#>Data data = new <#=tableName#>Data();
+            return data.QueryForCount(count);
         }
 
         /// <summary>
@@ -64,8 +66,8 @@ namespace AspNetCore.Demo.Enterprise.DateBase.Service
         /// <returns></returns>
         public static int Query<#=tableName#>otalCount(this <#=tableName#> entity)
         {
-            <#=tableName#>Data<<#=tableName#>> db = new <#=tableName#>Data<<#=tableName#>>();
-            return db.Query<#=tableName#>otalCount();
+            <#=tableName#>Data data = new <#=tableName#>Data();
+            return data.QueryTotalCount();
         }
 
         /// <summary>
@@ -76,8 +78,19 @@ namespace AspNetCore.Demo.Enterprise.DateBase.Service
         /// <returns></returns>
         public static IList<<#=tableName#>> QueryPageList(this <#=tableName#> entity,int pageIndex = 1,int pageCount = 10)
         {
-            <#=tableName#>Data<<#=tableName#>> db = new <#=tableName#>Data<<#=tableName#>>();
-            return db.QueryPageList(pageIndex, pageCount);
+            <#=tableName#>Data data = new <#=tableName#>Data();
+            return data.QueryPageList(pageIndex, pageCount);
+        }
+
+        /// <summary>
+        /// 插入单条信息
+        /// </summary>
+        /// <param name="entity">实体</param>
+        /// <returns></returns>
+        public static bool Insert(this <#=tableName#> entity)
+        {
+            <#=tableName#>Data data = new <#=tableName#>Data();
+            return data.Insert(entity) > 0;
         }
 
         /// <summary>
@@ -85,10 +98,10 @@ namespace AspNetCore.Demo.Enterprise.DateBase.Service
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public int Update(<#=tableName#> entity)
+        public static bool Update(<#=tableName#> entity)
         {
-            <#=tableName#>Data<<#=tableName#>> db = new <#=tableName#>Data<<#=tableName#>>();
-            return db.Update(entity.ID) > 0;
+            <#=tableName#>Data data = new <#=tableName#>Data();
+            return data.Update(entity) > 0;
         }
 
         /// <summary>
@@ -98,9 +111,14 @@ namespace AspNetCore.Demo.Enterprise.DateBase.Service
         /// <returns></returns>
         public static bool DeleteForId(this <#=tableName#> entity)
         {
-            <#=tableName#>Data<<#=tableName#>> db = new <#=tableName#>Data<<#=tableName#>>();
-            return db.DeleteForId(entity.ID) > 0;
+            <#=tableName#>Data data = new <#=tableName#>Data();
+            return data.DeleteForId(entity.Id) > 0;
         }
+        #endregion
+
+        #region 扩展方法
+
+        #endregion
     }
 }
 <#

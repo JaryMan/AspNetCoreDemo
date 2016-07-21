@@ -83,6 +83,33 @@ namespace AspNetCore.Demo.Enterprise.DateBase.Data
             var sqlStr = string.Format("SELECT TOP {0} * FROM(SELECT ROW_NUMBER() OVER(ORDER BY id) AS RowNumber, *FROM  <#=tableName#>) A WHERE RowNumber > {0} * ({1} - 1)", pageCount, pageIndex);
             return dbConnection.connection.Query<<#=tableName#>>(sqlStr).ToList();
         }
+
+        /// <summary>
+        /// 插入一条数据
+        /// </summary>
+        /// <param name="entity">实体对象</param>
+        /// <returns></returns>
+        public int Insert(<#=tableName#> entity)
+        {
+            if (!entity.Validator()) return 0;
+            var parameters = new DynamicParameters();
+            var valuesStr = new StringBuilder();
+            var parametersStr = new StringBuilder();
+<#
+        for(int i=0;i<table.Columns.Count;i++)
+        {
+            if(table.Columns[i].UpColumnName=="Id")continue;            
+#>
+            valuesStr.Append("<#=table.Columns[i].UpColumnName#><# if(i<table.Columns.Count-1){#>,<#}#>");
+            parametersStr.Append("@<#=table.Columns[i].UpColumnName#><# if(i<table.Columns.Count-1){#>,<#}#>");
+            parameters.Add("@<#=table.Columns[i].UpColumnName#>", entity.<#=table.Columns[i].UpColumnName#>); 
+
+<#
+        }
+#>
+            var sqlStr = string.Format("Insert Into User({0}) Values({1})", valuesStr,parametersStr);
+            return dbConnection.connection.Execute(sqlStr, parameters);
+        }
         
         /// <summary>
         /// 根据ID更新数据
@@ -98,7 +125,7 @@ namespace AspNetCore.Demo.Enterprise.DateBase.Data
 <#
         for(int i=0;i<table.Columns.Count;i++)
         {
-            if(table.Columns[i].UpColumnName=="ID")continue;            
+            if(table.Columns[i].UpColumnName=="Id")continue;            
 #>
             updateStr.Append("<#=table.Columns[i].UpColumnName#>=@<#=table.Columns[i].UpColumnName#><# if(i<table.Columns.Count-1){#>,<#}#>");
             parameters.Add("@<#=table.Columns[i].UpColumnName#>", entity.<#=table.Columns[i].UpColumnName#>); 
