@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AspNetCore.Demo.Enterprise.DateBase.Service
 {
-    public class UserSerivce: SerivceBase<User>
+    public class UserSerivce
     {
     }
 }

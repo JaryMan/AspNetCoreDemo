@@ -18,13 +18,16 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Project.Model
+namespace AspNetCore.Demo.Enterprise.DateBase.Model
 {
     [Serializable]
     public class <#=tableName#>
     {
         #region Constructor
-        public <#=tableName#>() { }
+        public <#=tableName#>() 
+        {
+            DataInit(); 
+        }
 
         public <#=tableName#>(<#=table.ColumnTypeNames#>)
         {
@@ -55,6 +58,28 @@ namespace Project.Model
         }
 #>
         #endregion
+
+        private void DataInit()
+        {
+<#
+        foreach(Column c in table.Columns)
+        {
+            if(c.TypeName==GeneratorHelper.StringType)
+            {
+#>
+           this.<#=c.UpColumnName#> = string.Empty;
+<#
+            }
+            else if(c.TypeName==GeneratorHelper.DateTimeType)
+            {
+#>
+           this.<#=c.UpColumnName#> = new DateTime("1900-1-1");
+<#
+            }
+
+        }
+#>
+        }
 
         #region Validator
         public List<string> ErrorList = new List<string>();

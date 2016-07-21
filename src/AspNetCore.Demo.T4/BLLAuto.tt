@@ -13,105 +13,96 @@
     foreach(string tableName in tableList)
     {
         manager.StartBlock(tableName+"Service.cs");
-        Table table=dbSchema.GetTableMetadata(tableName);
-        var Entity=tableName;
+        Table table=dbSchema.GetTableMetadata(tableName);        
 #>
-
-using Entity;
+using AspNetCore.Demo.Enterprise.DateBase.Data;
+using AspNetCore.Demo.Enterprise.DateBase.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using DapperEx;
-using System.Collections;
-using System.Data;
-using DAL;
+using System.Threading.Tasks;
 
-namespace BLL
-{   
-    public  class <#=tableName#>Service : ServiceBase<<#=Entity#>>
+namespace AspNetCore.Demo.Enterprise.DateBase.Service
+{
+    public static class <#=tableName#>Serivce
     {
-        private DbConnection _conn = new DbConnection();
-        
-        public int Insert(<#=tableName#> <#=tableName#>)
+        /// <summary>
+        /// 根据ID查询记录
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        public static <#=tableName#> QueryForId(this <#=tableName#> entity)
         {
-            using (Conn)
-            {
-                string query = "INSERT INTO Book(Name)VALUES(@name)";
-                return Conn.Execute(query, book);
-            }
+            <#=tableName#>Data<<#=tableName#>> db = new <#=tableName#>Data<<#=tableName#>>();
+            return db.QueryForId(entity.ID);
         }
 
-        public int Update(Model.Book book)
+        /// <summary>
+        /// 查询所有记录
+        /// </summary>
+        /// <returns></returns>
+        public static IList<<#=tableName#>> QueryAll(this <#=tableName#> entity)
         {
-            using (Conn)
-            {
-                string query = "UPDATE Book SET  Name=@name WHERE id =@id";
-                return Conn.Execute(query, book);
-            }
+            <#=tableName#>Data<<#=tableName#>> db = new <#=tableName#>Data<<#=tableName#>>();
+            return db.QueryAll();
         }
 
-        public int Delete(Model.Book book)
+        /// <summary>
+        /// 根据查询数量获取记录
+        /// </summary>
+        /// <param name="count">记录数</param>
+        /// <returns></returns>
+        public static IList<<#=tableName#>> QueryForCount(this <#=tableName#> entity,int count = 10)
         {
-            using (Conn)
-            {
-                string query = "DELETE FROM Book WHERE id = @id";
-                return Conn.Execute(query, book);
-            }
+            <#=tableName#>Data<<#=tableName#>> db = new <#=tableName#>Data<<#=tableName#>>();
+            return db.QueryForCount(count);
         }
 
-        public int Delete(string id)
+        /// <summary>
+        /// 查询总记录数
+        /// </summary>
+        /// <returns></returns>
+        public static int Query<#=tableName#>otalCount(this <#=tableName#> entity)
         {
-            using (Conn)
-            {
-                string query = "DELETE FROM Book WHERE id = @id";
-                return Conn.Execute(query, new { id = id });
-            }
+            <#=tableName#>Data<<#=tableName#>> db = new <#=tableName#>Data<<#=tableName#>>();
+            return db.Query<#=tableName#>otalCount();
         }
 
-        public IList<Model.Book> GetList()
+        /// <summary>
+        /// 分页查询
+        /// </summary>
+        /// <param name="pageIndex">页码</param>
+        /// <param name="pageCount">显示数</param>
+        /// <returns></returns>
+        public static IList<<#=tableName#>> QueryPageList(this <#=tableName#> entity,int pageIndex = 1,int pageCount = 10)
         {
-            using (Conn)
-            {
-                string query = "SELECT * FROM Book";
-                return Conn.Query<Book>(query).ToList();
-            }
+            <#=tableName#>Data<<#=tableName#>> db = new <#=tableName#>Data<<#=tableName#>>();
+            return db.QueryPageList(pageIndex, pageCount);
         }
 
-        public Model.Book GetEntity(string id)
+        /// <summary>
+        /// 根据ID更新数据
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public int Update(<#=tableName#> entity)
         {
-            Book book;
-            string query = "SELECT * FROM Book WHERE id = @id";
-            using (Conn)
-            {
-                book = Conn.Query<Book>(query, new { id = id }).SingleOrDefault();
-                return book;
-            }
+            <#=tableName#>Data<<#=tableName#>> db = new <#=tableName#>Data<<#=tableName#>>();
+            return db.Update(entity.ID) > 0;
         }
 
-        public Book GetEntityWithRefence(string id)
+        /// <summary>
+        /// 根据ID删除记录
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        public static bool DeleteForId(this <#=tableName#> entity)
         {
-            using (Conn)
-            {
-                string query = "SELECT * FROM Book b LEFT JOIN BookReview br ON br.BookId = b.Id WHERE b.id = @id";
-                Book lookup = null;
-                var b = Conn.Query<Book, BookReview, Book>(query,
-                    (book, bookReview) =>
-                    {
-                        if (lookup == null || lookup.Id != book.Id)
-                            lookup = book;
-                        if (bookReview != null)
-                            lookup.Reviews.Add(bookReview);
-                        return lookup;
-                    }, new { id = id }).Distinct().SingleOrDefault();
-                return b;
-            }
+            <#=tableName#>Data<<#=tableName#>> db = new <#=tableName#>Data<<#=tableName#>>();
+            return db.DeleteForId(entity.ID) > 0;
         }
-
-        #endregion
     }
 }
-
 <#
         manager.EndBlock();
     }

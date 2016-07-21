@@ -14,8 +14,8 @@
     {
         manager.StartBlock(tableName+"Data.cs");
         Table table=dbSchema.GetTableMetadata(tableName);
-        var modelValueName=tableName.Substring(0,1).ToLower() + tableName.Substring(1);
 #>
+using AspNetCore.Demo.Enterprise.DateBase.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,9 +23,11 @@ using System.Threading.Tasks;
 using Dapper;
 using System.Text;
 
-namespace AspNetCore.Demo.Enterprise.DateBase.Data.DataClass
+
+
+namespace AspNetCore.Demo.Enterprise.DateBase.Data
 {
-    public class <#=tableName#>
+    public class <#=tableName#>Data
     {
         protected DbConnection dbConnection = new DbConnection();
 
@@ -85,12 +87,12 @@ namespace AspNetCore.Demo.Enterprise.DateBase.Data.DataClass
         /// <summary>
         /// 根据ID更新数据
         /// </summary>
-        /// <param name="count"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        public int Update(<#=tableName#> <#=modelValueName#>)
+        public int Update(<#=tableName#> entity)
         {
-            if(<#=modelValueName#>.ID == 0) return 0;
-            if(!<#=modelValueName#>.Validator()) return 0;
+            if(entity.ID == 0) return 0;
+            if(!entity.Validator()) return 0;
             var parameters = new DynamicParameters();
             var updateStr = new StringBuilder();
 <#
@@ -99,7 +101,7 @@ namespace AspNetCore.Demo.Enterprise.DateBase.Data.DataClass
             if(table.Columns[i].UpColumnName=="ID")continue;            
 #>
             updateStr.Append("<#=table.Columns[i].UpColumnName#>=@<#=table.Columns[i].UpColumnName#><# if(i<table.Columns.Count-1){#>,<#}#>");
-            parameters.Add("@<#=table.Columns[i].UpColumnName#>", <#=modelValueName#>.<#=table.Columns[i].UpColumnName#>); 
+            parameters.Add("@<#=table.Columns[i].UpColumnName#>", entity.<#=table.Columns[i].UpColumnName#>); 
      
 <#
         }
