@@ -9,7 +9,7 @@ using System.Text;
 
 namespace AspNetCore.Demo.Enterprise.DateBase.Data
 {
-    public class UserData
+    public partial class UserData
     {
         private DbConnection dbConnection = new DbConnection();
 

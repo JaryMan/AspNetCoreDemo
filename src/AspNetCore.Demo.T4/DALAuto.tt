@@ -27,7 +27,7 @@ using System.Text;
 
 namespace AspNetCore.Demo.Enterprise.DateBase.Data
 {
-    public class <#=tableName#>Data
+    public partial class <#=tableName#>Data
     {
         protected DbConnection dbConnection = new DbConnection();
 

@@ -56,9 +56,17 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="BLLAutoExtend.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>BLLAutoExtend.cs</LastGenOutput>
+    </Content>
     <Content Include="BLLAuto.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>BLLAuto.cs</LastGenOutput>
+    </Content>
+    <Content Include="DALAutoExtend.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>DALAutoExtend.cs</LastGenOutput>
     </Content>
     <Content Include="DALAuto.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

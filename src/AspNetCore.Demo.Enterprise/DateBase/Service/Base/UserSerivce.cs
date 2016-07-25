@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AspNetCore.Demo.Enterprise.DateBase.Service
 {
-    public static class UserSerivce
+    public static partial class UserSerivce
     {
         /// <summary>
         /// 插入单条信息
