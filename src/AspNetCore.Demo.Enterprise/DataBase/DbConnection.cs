@@ -5,7 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AspNetCore.Demo.Enterprise.DateBase
+namespace AspNetCore.Demo.Enterprise.DataBase
 {
     public partial class DbConnection : IDisposable
     {

@@ -56,23 +56,23 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="BLLAutoExtend.tt">
+    <Content Include="ServiceExtend\BLLAutoExtend.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>BLLAutoExtend.cs</LastGenOutput>
     </Content>
-    <Content Include="BLLAuto.tt">
+    <Content Include="Service\BLLAuto.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>BLLAuto.cs</LastGenOutput>
     </Content>
-    <Content Include="DALAutoExtend.tt">
+    <Content Include="DataExtend\DALAutoExtend.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>DALAutoExtend.cs</LastGenOutput>
     </Content>
-    <Content Include="DALAuto.tt">
+    <Content Include="Data\DALAuto.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>DALAuto.cs</LastGenOutput>
     </Content>
-    <Content Include="ModelAuto.tt">
+    <Content Include="Model\ModelAuto.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>ModelAuto.cs</LastGenOutput>
     </Content>
@@ -80,6 +80,7 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

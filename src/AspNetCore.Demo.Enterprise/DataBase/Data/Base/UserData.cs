@@ -1,4 +1,4 @@
-﻿using AspNetCore.Demo.Enterprise.DateBase.Model;
+﻿using AspNetCore.Demo.Enterprise.DataBase.Model;
 
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Dapper;
 using System.Text;
 
-namespace AspNetCore.Demo.Enterprise.DateBase.Data
+namespace AspNetCore.Demo.Enterprise.DataBase.Data
 {
     public partial class UserData
     {

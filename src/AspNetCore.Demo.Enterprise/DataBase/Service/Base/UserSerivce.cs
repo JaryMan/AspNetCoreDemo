@@ -1,11 +1,11 @@
-﻿using AspNetCore.Demo.Enterprise.DateBase.Data;
-using AspNetCore.Demo.Enterprise.DateBase.Model;
+﻿using AspNetCore.Demo.Enterprise.DataBase.Data;
+using AspNetCore.Demo.Enterprise.DataBase.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AspNetCore.Demo.Enterprise.DateBase.Service
+namespace AspNetCore.Demo.Enterprise.DataBase.Service
 {
     public static partial class UserSerivce
     {

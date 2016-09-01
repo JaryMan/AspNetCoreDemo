@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AspNetCore.Demo.Enterprise.DateBase.Model
+namespace AspNetCore.Demo.Enterprise.DataBase.Model
 {
     public class User
     {

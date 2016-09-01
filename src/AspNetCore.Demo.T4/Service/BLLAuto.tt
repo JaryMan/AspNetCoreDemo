@@ -3,8 +3,8 @@
 <#@ assembly name="System.Core"#>
 <#@ import namespace="System"#>
 <#@ import namespace="System.Collections.Generic"#>
-<#@ include file="DBSchema.ttinclude"#>
-<#@ include file="MultiDocument.ttinclude"#>
+<#@ include file="../DBSchema.ttinclude"#>
+<#@ include file="../MultiDocument.ttinclude"#>
 <# var manager = new Manager(Host, GenerationEnvironment, true) { OutputPath = Path.GetDirectoryName(Host.TemplateFile)}; #>
 
 <#
@@ -15,14 +15,14 @@
         manager.StartBlock(tableName+"Service.cs");
         Table table=dbSchema.GetTableMetadata(tableName);        
 #>
-using AspNetCore.Demo.Enterprise.DateBase.Data;
-using AspNetCore.Demo.Enterprise.DateBase.Model;
+using AspNetCore.Demo.Enterprise.DataBase.Data;
+using AspNetCore.Demo.Enterprise.DataBase.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AspNetCore.Demo.Enterprise.DateBase.Service
+namespace AspNetCore.Demo.Enterprise.DataBase.Service
 {
     public static partial class <#=tableName#>Serivce
     {
@@ -36,7 +36,7 @@ namespace AspNetCore.Demo.Enterprise.DateBase.Service
         public static <#=tableName#> QueryForId(this <#=tableName#> entity)
         {
             <#=tableName#>Data data = new <#=tableName#>Data();
-            return data.QueryForId(entity.Id);
+            return data.QueryForId(entity);
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace AspNetCore.Demo.Enterprise.DateBase.Service
         public static bool DeleteForId(this <#=tableName#> entity)
         {
             <#=tableName#>Data data = new <#=tableName#>Data();
-            return data.DeleteForId(entity.Id) > 0;
+            return data.DeleteForId(entity) > 0;
         }
         #endregion
 

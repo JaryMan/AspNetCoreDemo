@@ -3,8 +3,8 @@
 <#@ assembly name="System.Core"#>
 <#@ import namespace="System"#>
 <#@ import namespace="System.Collections.Generic"#>
-<#@ include file="DBSchema.ttinclude"#>
-<#@ include file="MultiDocument.ttinclude"#>
+<#@ include file="../DBSchema.ttinclude"#>
+<#@ include file="../MultiDocument.ttinclude"#>
 <# var manager = new Manager(Host, GenerationEnvironment, true) { OutputPath = Path.GetDirectoryName(Host.TemplateFile)}; #>
 <#
     var dbSchema=DBSchemaFactory.GetDBSchema();
@@ -18,7 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace AspNetCore.Demo.Enterprise.DateBase.Model
+namespace AspNetCore.Demo.Enterprise.DataBase.Model
 {
     [Serializable]
     public class <#=tableName#>
@@ -91,16 +91,6 @@ namespace AspNetCore.Demo.Enterprise.DateBase.Model
         {
             if(!c.AllowDBNull)
             {
-                if(c.TypeName==GeneratorHelper.StringType)
-                {
-#>
-            if (string.IsNullOrEmpty(this.<#=c.UpColumnName#>))
-            {
-                validatorResult = false;
-                this.ErrorList.Add("The <#=c.UpColumnName#> should not be empty!");
-            }
-<#
-                }
                 if(c.TypeName==GeneratorHelper.DateTimeType)
                 {
 #>
