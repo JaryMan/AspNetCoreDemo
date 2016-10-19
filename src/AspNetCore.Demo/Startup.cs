@@ -28,7 +28,7 @@ namespace AspNetCore.Demo
             Configuration = builder.Build();
 
             //配置数据库连接字符串
-            Enterprise.DateBase.DbContent.ConnectionString = Configuration.GetConnectionString("DefaultConnection");
+            Enterprise.DataBase.DbConnection.ConnectionString = Configuration.GetConnectionString("DefaultConnection");
         }
 
         public IConfigurationRoot Configuration { get; }
