@@ -2,8 +2,8 @@
   "version": "1.0.0-*",
 
   "dependencies": {
-    "Dapper": "1.50.1",
-    "NETStandard.Library": "1.6.0"
+    "Dapper": "1.50.3-beta1",
+    "NETStandard.Library": "1.6.1"
   },
 
   "frameworks": {
