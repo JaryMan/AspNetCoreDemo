@@ -11,11 +11,11 @@ namespace Asp.NetCore.Demo.Web
     {
         public static void Main(string[] args)
         {
-            var host = new WebHostBuilder()
-                .UseKestrel()
+            var host = new WebHostBuilder()                
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseIISIntegration()
                 .UseStartup<Startup>()
+                .UseKestrel()
                 .Build();
 
             host.Run();
