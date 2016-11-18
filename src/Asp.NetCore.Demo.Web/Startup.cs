@@ -8,7 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace AspNetCore.Demo
+namespace Asp.NetCore.Demo.Web
 {
     public class Startup
     {
@@ -19,16 +19,7 @@ namespace AspNetCore.Demo
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
-
-            if (env.IsDevelopment())
-            {
-                // This will push telemetry data through Application Insights pipeline faster, allowing you to view results immediately.
-                builder.AddApplicationInsightsSettings(developerMode: true);
-            }
             Configuration = builder.Build();
-
-            //配置数据库连接字符串
-            Enterprise.DataBase.DbConnection.ConnectionString = Configuration.GetConnectionString("DefaultConnection");
         }
 
         public IConfigurationRoot Configuration { get; }
@@ -37,8 +28,6 @@ namespace AspNetCore.Demo
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
-            services.AddApplicationInsightsTelemetry(Configuration);
-
             services.AddMvc();
         }
 
@@ -47,8 +36,6 @@ namespace AspNetCore.Demo
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
-
-            app.UseApplicationInsightsRequestTelemetry();
 
             if (env.IsDevelopment())
             {
@@ -59,8 +46,6 @@ namespace AspNetCore.Demo
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-
-            app.UseApplicationInsightsExceptionTelemetry();
 
             app.UseStaticFiles();
 

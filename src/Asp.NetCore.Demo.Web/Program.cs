@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 
-namespace AspNetCore.Demo
+namespace Asp.NetCore.Demo.Web
 {
     public class Program
     {
