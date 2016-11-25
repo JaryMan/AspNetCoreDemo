@@ -26,8 +26,6 @@ namespace AspNetCore.Demo.Enterprise.DataBase.Service
 {
     public static partial class <#=tableName#>Serivce
     {
-        #region 基本方法
-
         /// <summary>
         /// 根据ID查询记录
         /// </summary>
@@ -64,7 +62,7 @@ namespace AspNetCore.Demo.Enterprise.DataBase.Service
         /// 查询总记录数
         /// </summary>
         /// <returns></returns>
-        public static int Query<#=tableName#>otalCount(this <#=tableName#> entity)
+        public static int QueryTotalCount(this <#=tableName#> entity)
         {
             <#=tableName#>Data data = new <#=tableName#>Data();
             return data.QueryTotalCount();
@@ -98,27 +96,22 @@ namespace AspNetCore.Demo.Enterprise.DataBase.Service
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public static bool Update(<#=tableName#> entity)
+        public static bool Update(this <#=tableName#> entity)
         {
             <#=tableName#>Data data = new <#=tableName#>Data();
             return data.Update(entity) > 0;
         }
 
         /// <summary>
-        /// 根据ID删除记录
+        /// 根据ID删除记录(isRealDel为true则真删除)
         /// </summary>
         /// <param name="id">id</param>
         /// <returns></returns>
-        public static bool DeleteForId(this <#=tableName#> entity)
+        public static bool DeleteForId(this <#=tableName#> entity,bool isRealDel = false)
         {
             <#=tableName#>Data data = new <#=tableName#>Data();
-            return data.DeleteForId(entity) > 0;
+            return data.DeleteForId(entity,isRealDel) > 0;
         }
-        #endregion
-
-        #region 扩展方法
-
-        #endregion
     }
 }
 <#

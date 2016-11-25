@@ -29,18 +29,16 @@ namespace AspNetCore.Demo.Enterprise.DataBase.Data
 {
     public partial class <#=tableName#>Data
     {
-        protected DbConnection dbConnection = new DbConnection();
-
-        #region 基本方法
-
         /// <summary>
         /// 根据ID查询信息
         /// </summary>
-        /// <param name="id">ID号</param>
         /// <returns></returns>
         public <#=tableName#> QueryForId(<#=tableName#> entity)
         {
-            return dbConnection.connection.QueryFirstOrDefault<<#=tableName#>>("select Id=@Id", entity.Id);
+            using(var dbConnection = new DbConnection())
+            {
+                return dbConnection.connection.QueryFirstOrDefault<<#=tableName#>>("select * from <#=tableName#> where Id=@Id and IsDelete=0", new { Id = entity.Id });
+            }
         }
 
         /// <summary>
@@ -49,7 +47,10 @@ namespace AspNetCore.Demo.Enterprise.DataBase.Data
         /// <returns></returns>
         public IList<<#=tableName#>> QueryAll()
         {
-            return dbConnection.connection.Query<<#=tableName#>>("select * from <#=tableName#>").ToList();
+            using(var dbConnection = new DbConnection())
+            {
+                return dbConnection.connection.Query<<#=tableName#>>("select * from <#=tableName#> where IsDelete=0").ToList();
+            }
         }
 
         /// <summary>
@@ -59,8 +60,11 @@ namespace AspNetCore.Demo.Enterprise.DataBase.Data
         /// <returns></returns>
         public IList<<#=tableName#>> QueryForCount(int count)
         {
-            var sqlStr = string.Format("select top {0} * from <#=tableName#>", count);
-            return dbConnection.connection.Query<<#=tableName#>>(sqlStr).ToList();
+            using(var dbConnection = new DbConnection())
+            {
+                var sqlStr = string.Format("select top {0} * from <#=tableName#> where IsDelete=0", count);
+                return dbConnection.connection.Query<<#=tableName#>>(sqlStr).ToList();
+            }
         }
 
         /// <summary>
@@ -69,7 +73,10 @@ namespace AspNetCore.Demo.Enterprise.DataBase.Data
         /// <returns></returns>
         public int QueryTotalCount()
         {
-            return dbConnection.connection.QueryFirst<int>("select count(0) from <#=tableName#>");
+            using(var dbConnection = new DbConnection())
+            {
+               return dbConnection.connection.QueryFirst<int>("select count(0) from <#=tableName#> where IsDelete=0");
+            }
         }
 
         /// <summary>
@@ -80,8 +87,11 @@ namespace AspNetCore.Demo.Enterprise.DataBase.Data
         /// <returns></returns>
         public IList<<#=tableName#>> QueryPageList(int pageIndex, int pageCount)
         {
-            var sqlStr = string.Format("SELECT TOP {0} * FROM(SELECT ROW_NUMBER() OVER(ORDER BY id) AS RowNumber, *FROM  <#=tableName#>) A WHERE RowNumber > {0} * ({1} - 1)", pageCount, pageIndex);
-            return dbConnection.connection.Query<<#=tableName#>>(sqlStr).ToList();
+            using(var dbConnection = new DbConnection())
+            {
+                var sqlStr = string.Format("SELECT TOP {0} * FROM(SELECT ROW_NUMBER() OVER(ORDER BY id) AS RowNumber, *FROM  <#=tableName#> where IsDelete=0) A WHERE RowNumber > {0} * ({1} - 1)", pageCount, pageIndex);
+                return dbConnection.connection.Query<<#=tableName#>>(sqlStr).ToList();
+            }
         }
 
         /// <summary>
@@ -107,18 +117,20 @@ namespace AspNetCore.Demo.Enterprise.DataBase.Data
 <#
         }
 #>
-            var sqlStr = string.Format("Insert Into User({0}) Values({1})", valuesStr,parametersStr);
-            return dbConnection.connection.Execute(sqlStr, parameters);
+            using(var dbConnection = new DbConnection())
+            {
+                var sqlStr = string.Format("Insert Into <#=tableName#>({0}) Values({1})", valuesStr,parametersStr);
+                return dbConnection.connection.Execute(sqlStr, parameters);
+            }
         }
         
         /// <summary>
         /// 根据ID更新数据
         /// </summary>
-        /// <param name="entity"></param>
         /// <returns></returns>
         public int Update(<#=tableName#> entity)
         {
-            if(entity.ID == 0) return 0;
+            if(entity.Id == 0) return 0;
             if(!entity.Validator()) return 0;
             var parameters = new DynamicParameters();
             var updateStr = new StringBuilder();
@@ -132,26 +144,29 @@ namespace AspNetCore.Demo.Enterprise.DataBase.Data
      
 <#
         }
-#>
-            var sqlStr = string.Format("update <#=tableName#> set {0} where Id=@Id",updateStr);
-            return dbConnection.connection.Execute(sqlStr,parameters);
+#>          
+            using(var dbConnection = new DbConnection())
+            {  
+                var sqlStr = string.Format("update <#=tableName#> set {0} where Id=@Id",updateStr);
+                parameters.Add("@Id", entity.Id);
+                return dbConnection.connection.Execute(sqlStr,parameters);
+            }
         }
 
         /// <summary>
-        /// 根据ID删除信息
+        /// 根据ID删除信息(isRealDel为true则真删除)
         /// </summary>
-        /// <param name="id">ID</param>
         /// <returns></returns>
-        public int DeleteForId(<#=tableName#> entity)
+        public int DeleteForId(<#=tableName#> entity,bool isRealDel)
         {
-            return dbConnection.connection.Execute("Delete from  <#=tableName#> where Id=@Id", entity.Id);
+            using(var dbConnection = new DbConnection())
+            {
+                if(isRealDel)
+                    return dbConnection.connection.Execute("Delete from  <#=tableName#> where Id=@Id", new { Id = entity.Id });
+                else
+                    return dbConnection.connection.Execute("Update <#=tableName#> set IsDelete=2 where Id=@Id", new { Id = entity.Id });
+            }
         }
-
-        #endregion
-
-        #region 扩展方法
-        
-        #endregion
     }
 }
 <#
