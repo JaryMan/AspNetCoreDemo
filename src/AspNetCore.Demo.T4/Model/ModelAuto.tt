@@ -43,6 +43,13 @@ namespace AspNetCore.Demo.Enterprise.DataBase.Model
         #endregion
 
         #region Attributes
+
+        /// <summary>
+        /// 查询参数
+        /// </summary>
+        [NonSerialized]
+        public SelectParameter SelectParameter { get; set; }
+
 <#
         foreach(Column c in table.Columns)
         {

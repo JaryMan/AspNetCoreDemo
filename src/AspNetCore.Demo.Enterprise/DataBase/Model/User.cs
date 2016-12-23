@@ -5,8 +5,15 @@ using System.Threading.Tasks;
 
 namespace AspNetCore.Demo.Enterprise.DataBase.Model
 {
+
     public class User
     {
+        /// <summary>
+        /// 查询参数
+        /// </summary>
+        
+        public SelectParameter SelectParameter { get; set; }
+
         public int ID { get; set; }
 
         /// <summary>
