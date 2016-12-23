@@ -124,6 +124,42 @@ namespace AspNetCore.Demo.Enterprise.DataBase.Model
             return validatorResult;
         }    
         #endregion
+
+        #region Serializable
+        /// <summary>
+        /// 序列化
+        /// </summary>
+        /// <returns></returns>
+        public string Serializable()
+        {
+            var json = new StringBuilder();
+            json.Append("{");
+<#
+        for(int i = 0;i< table.Columns.Count;i++)
+        {
+#>
+<#
+            if(table.Columns[i].TypeName==GeneratorHelper.StringType||table.Columns[i].TypeName==GeneratorHelper.DateTimeType){
+#>
+            json.Append(string.Concat("\"<#=table.Columns[i].UpColumnName#>\":\"", <#=table.Columns[i].UpColumnName#>,"\""));
+<#
+            }else{
+#>
+            json.Append(string.Concat("\"<#=table.Columns[i].UpColumnName#>\":", <#=table.Columns[i].UpColumnName#>));
+<#
+            }
+            if( i < table.Columns.Count - 1)
+            {
+#>
+            json.Append(",");
+<#
+            }
+        }
+#>
+            json.Append("}");
+            return json.ToString();
+        }
+        #endregion
     }
 }
 <#
